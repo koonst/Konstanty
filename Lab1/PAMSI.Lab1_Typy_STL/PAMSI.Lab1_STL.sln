@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29911.84
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PAMSI.Lab1_STL", "PAMSI.Lab1_STL\PAMSI.Lab1_STL.vcxproj", "{061B9B18-C524-4709-A537-6ECB7828841E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{061B9B18-C524-4709-A537-6ECB7828841E}.Debug|x64.ActiveCfg = Debug|x64
+		{061B9B18-C524-4709-A537-6ECB7828841E}.Debug|x64.Build.0 = Debug|x64
+		{061B9B18-C524-4709-A537-6ECB7828841E}.Debug|x86.ActiveCfg = Debug|Win32
+		{061B9B18-C524-4709-A537-6ECB7828841E}.Debug|x86.Build.0 = Debug|Win32
+		{061B9B18-C524-4709-A537-6ECB7828841E}.Release|x64.ActiveCfg = Release|x64
+		{061B9B18-C524-4709-A537-6ECB7828841E}.Release|x64.Build.0 = Release|x64
+		{061B9B18-C524-4709-A537-6ECB7828841E}.Release|x86.ActiveCfg = Release|Win32
+		{061B9B18-C524-4709-A537-6ECB7828841E}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C8B7925B-5E2D-413C-9FC7-38C8B680708B}
+	EndGlobalSection
+EndGlobal
