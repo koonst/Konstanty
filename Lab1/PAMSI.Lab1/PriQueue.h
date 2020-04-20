@@ -1,70 +1,215 @@
 #pragma once
 #include <iostream>
-#include <cstdio>
-#include <cstring>
-#include <cstdlib>
+#include <new>
 using namespace std;
-struct n // node declaration 
-{
-    int p;
-    int info;
-    struct n* l;
-};
-class Priority_Queue
+
+template <typename T>
+class QueueP
 {
 private:
-    //Declare a front pointer f and initialize it to NULL.
-    n* f;
+    T* A;
+    int* P;
+    int count;
+
 public:
-    Priority_Queue() //constructor 
+
+    QueueP() { count = 0; }
+
+    QueueP(const QueueP& _Q)
     {
-        f = NULL;
-    }
-void insert(int i, int p) 
-    {
-    n* t, * q;
-    t = new n;
-    t->info = i;
-    t->p = p;
-    if (f == NULL || p < f->p) 
+        try 
         {
-        t->l = f;
-        f = t;
+            A = new T[_Q.count];
+            P = new int[_Q.count];
         }
-    else {
-        q = f;
-        while (q->l != NULL && q->l->p <= p)
-            q = q->l;
-        t->l = q->l;
-        q->l = t;
-         }
+        catch (bad_alloc e)
+        {
+            cout << e.what() << endl;
+            count = 0;
+            return;
+        }
+
+        count = _Q.count;
+
+        for (int i = 0; i < count; i++)
+            A[i] = _Q.A[i];
+
+        for (int i = 0; i < count; i++)
+            P[i] = _Q.P[i];
     }
-void del() 
+
+    ~QueueP()
     {
-    n* t;
-    if (f == NULL) //if queue is null
-        cout << "Queue Underflow\n";
-    else {
-        t = f;
-        cout << "Deleted item is: " << t->info << endl;
-        f = f->l;
-        free(t);
+        if (count > 0)
+        {
+            delete[] A;
+            delete[] P;
         }
     }
-void show() //display queue 
+
+    QueueP operator=(const QueueP& _Q);
+
+    void Enqueue(T item, int priority);
+    T Dequeue();
+
+    void Clear()
     {
-n* ptr;
-ptr = f;
-if (f == NULL)
-cout << "Queue is empty\n";
-else    {
-    cout << "Queue is :\n";
-    cout << "Priority Item\n";
-    while (ptr != NULL) 
-            {
-        cout << ptr->p << " " << ptr->info << endl;
-        ptr = ptr->l;
-            }
+        if (count > 0)
+        {
+            delete[] A;
+            delete[] P;
+            count = 0;
         }
     }
+
+    int Count()
+    {
+        return count;
+    }
+
+    void Print(const char* objName);
 };
+
+
+template <typename T>
+QueueP<T> QueueP<T>::operator=(const QueueP& _Q)
+{
+    if (count > 0)
+    {
+        delete[] A;
+        delete[] P;
+        count = 0;
+    }
+
+    try {
+        A = new T[_Q.count];
+        P = new int[_Q.count];
+    }
+    catch (bad_alloc e)
+    {
+        cout << e.what() << endl;
+        return *this;
+    }
+
+    count = _Q.count;
+
+    for (int i = 0; i < count; i++)
+    {
+        A[i] = _Q.A[i];
+        P[i] = _Q.P[i];
+    }
+    return *this;
+}
+
+template <typename T>
+void QueueP<T>::Enqueue(T item, int priority)
+{
+
+    T* A2;
+    int* P2;
+
+    try 
+    {
+        A2 = (T*)new T[count + 1];
+        P2 = (int*)new int[count + 1];
+    }
+    catch (bad_alloc e)
+    {
+        cout << e.what() << endl;
+        return;
+    }
+
+    int pos;
+
+    if (count == 0)
+        pos = 0;
+    else
+    {
+        pos = 0;
+        while (pos < count)
+        {
+            if (P[pos] < priority) break;
+            pos++;
+        }
+    }
+
+    for (int i = 0; i < pos; i++)
+    {
+        A2[i] = A[i];
+        P2[i] = P[i];
+    }
+
+    A2[pos] = item;
+    P2[pos] = priority;
+
+    for (int i = pos + 1; i < count + 1; i++)
+    {
+        A2[i] = A[i - 1];
+        P2[i] = P[i - 1];
+    }
+
+    if (count > 0)
+    {
+        delete[] A;
+        delete[] P;
+    }
+
+    A = A2;
+    P = P2;
+
+    count++;
+}
+
+
+template <typename T>
+T QueueP<T>::Dequeue()
+{
+
+    if (count == 0)
+        return 0;
+
+    T* A2;
+    int* P2;
+
+    try {
+        A2 = new T[count - 1];
+        P2 = new int[count - 1];
+    }
+    catch (bad_alloc e)
+    {
+        cout << e.what() << endl;
+        return 0;
+    }
+
+    T item;
+    item = A[0];
+
+    for (int i = 0; i < count - 1; i++)
+    {
+        A2[i] = A[i + 1];
+        P2[i] = P[i + 1];
+    }
+
+    if (count > 0)
+    {
+        delete[] A;
+        delete[] P;
+    }
+
+    count--;
+
+    A = A2;
+    P = P2;
+
+    return item;
+}
+
+template <typename T>
+void QueueP<T>::Print(const char* objName)
+{
+    cout << "Object: " << objName << endl;
+    for (int i = 0; i < count; i++)
+        cout << A[i] << ":" << P[i] << "\t" << endl;
+    cout << endl;
+    cout << "---------------" << endl;
+}

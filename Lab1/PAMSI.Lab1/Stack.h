@@ -1,91 +1,137 @@
 #pragma once
 #include <iostream>
-#include <cstdlib>
+#include <new>
 using namespace std;
 
-#define sIZE 10 // capacity of the stack
 
-class stack
+template <typename T>
+class STACK
 {
-	int* arr;
-	int top;      // size
-	int capacity; // max capacity
+private:
+    T* stack; 
+    int count; 
 
 public:
-	stack(int size = sIZE); 	// constructor
-	~stack();   				// destructor
+    
+    STACK()
+    {
+        stack = nullptr; 
+        count = 0; 
+    }
 
-	void push(int);
-	int pop();
-	int peek();
+    STACK(const STACK& st)
+    {
+        try 
+        {
+            stack = new T[st.count];
 
-	int size();
-	bool isEmpty();
-	bool isFull();
+            count = st.count;
+            for (int i = 0; i < count; i++)
+                stack[i] = st.stack[i];
+        }
+        catch (bad_alloc e)
+        {
+            cout << e.what() << endl;
+        }
+    }
+
+    STACK operator=(const STACK& st)
+    {
+        if (count > 0)
+        {
+            count = 0;
+            delete[] stack;
+        }
+        try 
+        {
+            stack = new T[st.count];
+
+            count = st.count;
+            for (int i = 0; i < count; i++)
+                stack[i] = st.stack[i];
+        }
+        catch (bad_alloc e)
+        {
+            cout << e.what() << endl;
+        }
+
+        return *this;
+    }
+
+    ~STACK()
+    {
+        if (count > 0)
+            delete[] stack;
+    }
+
+    
+    void push(T item)
+    {
+        T* tmp; 
+
+        
+        try {
+            
+            tmp = stack;        
+            stack = new T[count + 1];
+         
+            count++;
+          
+            for (int i = 0; i < count - 1; i++)
+                stack[i] = tmp[i];
+          
+            stack[count - 1] = item;
+
+            if (count > 1)
+                delete[] tmp;
+        }
+        catch (bad_alloc e)
+        {
+            cout << e.what() << endl;
+        }
+    }
+
+    T pop()
+    {
+        if (count == 0)
+            return 0;
+        count--;
+        return stack[count];
+    }
+
+    T Head()
+    {
+        if (count == 0)
+            return 0;
+        return stack[count - 1];
+    }
+
+    
+    int Count()
+    {
+        return count;
+    }
+
+    bool IsEmpty()
+    {
+        return count == 0;
+    }
+
+    void Print()
+    {
+        T* p;
+
+        p = stack;
+
+        cout << "Stack: " << endl;
+        if (count == 0)
+            cout << "is empty." << endl;
+
+        for (int i = 0; i < count; i++)
+        {
+            cout << "Item[" << i << "] = " << *p << endl;
+            p++;
+        }
+        cout << endl;
+    }
 };
-// Constructor
-stack::stack(int size)
-{
-	arr = new int[size];
-	capacity = size;
-	top = -1;
-}
-
-// Destructor
-stack::~stack()
-{
-	delete arr;
-}
-void stack::push(int x)
-{
-	if (isFull())
-	{
-		cout << "OverFlow\nProgram Terminated\n";
-		exit(EXIT_FAILURE);
-	}
-
-	cout << "Inserting " << x << endl;
-	arr[++top] = x;
-}
-
-int stack::pop()
-{
-
-	if (isEmpty())
-	{
-		cout << "UnderFlow\nProgram Terminated\n";
-		exit(EXIT_FAILURE);
-	}
-
-	cout << "Removing " << peek() << endl;
-
-
-	return arr[top--];
-}
-
-// return top element in a stack
-int stack::peek()
-{
-	if (!isEmpty())
-		return arr[top];
-	else
-		exit(EXIT_FAILURE);
-}
-
-// size
-int stack::size()
-{
-	return top + 1;
-}
-
-// check if the stack is empty or not
-bool stack::isEmpty()
-{
-	return top == -1;	// size() == 0;?
-}
-
-// is full or not
-bool stack::isFull()
-{
-	return top == capacity - 1;	// return size() == capacity;?
-}
